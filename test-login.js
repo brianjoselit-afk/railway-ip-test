@@ -26,9 +26,14 @@ async function runLoginTest() {
   let browser;
   try {
     push('[2/5] Launching Chromium with proxy...');
+   const proxyUrl = new URL(PROXY_URL);
     browser = await chromium.launch({
       headless: true,
-      proxy: { server: PROXY_URL }
+      proxy: {
+        server: `${proxyUrl.protocol}//${proxyUrl.hostname}:${proxyUrl.port}`,
+        username: decodeURIComponent(proxyUrl.username),
+        password: decodeURIComponent(proxyUrl.password)
+      }
     });
     const page = await browser.newPage();
 
